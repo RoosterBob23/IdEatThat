@@ -25,18 +25,20 @@ export default function GameRoom() {
     useEffect(() => {
         if (!socket) return;
 
+        socket.emit('joinRoom', { gameId: id });
+
         socket.on('gameUpdate', (game: GameState) => {
             setGameState(game);
         });
 
         socket.on('connect', () => {
-            // Re-join logic if needed, but for now assuming persistent
+            socket.emit('joinRoom', { gameId: id });
         });
 
         return () => {
             socket.off('gameUpdate');
         };
-    }, [socket]);
+    }, [socket, id]);
 
     if (!gameState) return <div className="text-4xl font-bold animate-pulse text-kitchen-wood">Entering the Kitchen...</div>;
 

@@ -32,6 +32,14 @@ app.prepare().then(() => {
             socket.emit('gameUpdate', game);
         });
 
+        socket.on('joinRoom', ({ gameId }) => {
+            const game = GameRegistry.getGame(gameId);
+            if (game) {
+                socket.join(gameId);
+                socket.emit('gameUpdate', game);
+            }
+        });
+
         socket.on('joinGame', ({ gameId, name }) => {
             const game = GameRegistry.joinGame(gameId, socket.id, name);
             if (game) {

@@ -1,0 +1,102 @@
+Name,Type
+Apple,Food
+Asparagus,Food
+Avacodo,Food
+Baby back ribs,Food
+Bacon,Food
+Banana,Food
+Bell Pepper,Food
+Bologna,Food
+Bread,Food
+Broccoli,Food
+Butter,Food
+Butter milk,Food
+Cabbage,Food
+Carrots,Food
+Cauliflower,Food
+Cheddar Cheese,Food
+Cheese Doritos,Food
+Cheezit,Food
+Chicken Breasts,Food
+Chocolate,Food
+Coca Cola,Food
+Corn on the cob,Food
+Corn starch,Food
+Crisco,Food
+Delmonico Steaks,Food
+Dry Dog food,Food
+Eggplant,Food
+Eggs,Food
+Flour,Food
+Frozen chicken nuggets,Food
+Grapefruit,Food
+Ground beef,Food
+Half and Half,Food
+Ham and cheese hot pocket,Food
+Hamburger patties,Food
+Heavy Cream,Food
+Hot peppers,Food
+Lamb,Food
+Lard,Food
+Lettuce,Food
+Lime,Food
+Little Smokies,Food
+Liver,Food
+Lobster,Food
+Milk,Food
+Mozzerella Cheese,Food
+Onions,Food
+Oranges,Food
+Peanut Butter,Food
+Peanut oil,Food
+Peanuts,Food
+Beef Tongue,Food
+Pork,Food
+Racoon meat,Food
+Rice,Food
+Rocky mountain oysters,Food
+Scorpion,Food
+Shrimp,Food
+Snake,Food
+Spinach,Food
+Steak,Food
+Summer squash,Food
+Sweet breads (organ meat),Food
+Sweet Peppers,Food
+Sweet potatoes,Food
+Talapia (Fish),Food
+Tofu,Food
+Tomato,Food
+Tuna (Fish),Food
+Vanilla ice cream,Food
+Velveta,Food
+Vodka,Food
+Winter Squash,Food
+Wonder Bread,Food
+Yogurt,Food
+Add a food of your choice to a meal,Sabotage
+Food of your choice is over salted,Sabotage
+Food of your choice is over-cooked,Sabotage
+Food of your choice is spoiled,Sabotage
+Food of your choice is under cooked,Sabotage
+Food of your choice is underseasoned,Sabotage
+Judge has a peanut allergy,Sabotage
+Judge is Dairy Free,Sabotage
+Judge is gluten Free,Sabotage
+Protein of your choice is overcooked,Sabotage
+Remove an item of your choice from a meal,Sabotage
+Swap out food item of your choice with  one in your hand,Sabotage
+The Judge is a vegetarian,Sabotage
+The Judge is vegan,Sabotage
+Vegetable of your choice is over salted,Sabotage
+Chinese,Theme
+Asian,Theme
+Fried,Theme
+Greek,Theme
+Mexican,Theme
+Indian,Theme
+Vegetarian,Theme
+Vegan,Theme
+Only Animal Protein,Theme
+Only Green Veg,Theme
+Smothered,Theme

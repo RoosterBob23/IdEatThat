@@ -56,27 +56,43 @@ export default function GameRoom() {
     const isGM = me?.isGM;
     const isCritic = me?.isCritic;
 
+    useEffect(() => {
+        if (gameState?.phase === 'THEME' || gameState?.phase === 'LOBBY' || gameState?.phase === 'WINNER') {
+            setSelectedCards([]);
+            setTargetPlayerId(null);
+        }
+    }, [gameState?.phase]);
+
     const copyCode = async () => {
         const text = gameState?.id || '';
         try {
-            await navigator.clipboard.writeText(text);
-            setCopied(true);
-        } catch (err) {
-            // Fallback for older browsers or non-secure contexts
-            const textArea = document.createElement("textarea");
-            textArea.value = text;
-            document.body.appendChild(textArea);
-            textArea.select();
-            try {
-                document.execCommand('copy');
+            // Priority 1: Modern API
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                await navigator.clipboard.writeText(text);
                 setCopied(true);
-            } catch (copyErr) {
-                console.error('Fallback copy failed', copyErr);
+                return;
             }
-            document.body.removeChild(textArea);
-        }
-        if (copied) {
-            setTimeout(() => setCopied(false), 2000);
+            throw new Error('Clipboard API unavailable');
+        } catch (err) {
+            // Priority 2: Fallback text area
+            try {
+                const textArea = document.createElement("textarea");
+                textArea.value = text;
+                // Ensure it's not visible but part of DOM
+                textArea.style.position = "fixed";
+                textArea.style.left = "-9999px";
+                textArea.style.top = "0";
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                const successful = document.execCommand('copy');
+                document.body.removeChild(textArea);
+                if (successful) {
+                    setCopied(true);
+                }
+            } catch (fallbackErr) {
+                console.error('Copy failed completely', fallbackErr);
+            }
         }
     };
 
@@ -87,7 +103,10 @@ export default function GameRoom() {
         }
     }, [copied]);
 
-    const startNextRound = () => socket?.emit('nextRound', { gameId: gameState.id });
+    const startNextRound = () => {
+        console.log('[DEBUG] GM clicking Next Round');
+        socket?.emit('nextRound', { gameId: gameState?.id });
+    };
 
     // Phase Renderers
     const renderLobby = () => (

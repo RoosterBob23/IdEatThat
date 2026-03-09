@@ -220,8 +220,10 @@ export function nextRound(gameId: string): GameState | null {
     const game = games.get(gameId);
     if (!game) return null;
 
+    console.log(`[DEBUG] nextRound: Starting round cleanup for game ${gameId}`);
     // Move cards to discard pile and clear temporary fields
     game.players.forEach(p => {
+        console.log(`[DEBUG] nextRound: Clearing cards for player ${p.name}. Had ${p.submittedCards.length} submitted cards.`);
         game.discardPile.push(...p.submittedCards);
         game.discardPile.push(...p.sabotageCards);
         p.submittedCards = [];
@@ -246,6 +248,7 @@ export function nextRound(gameId: string): GameState | null {
     game.players[currentCriticIndex].isCritic = false;
     const nextCriticIndex = (currentCriticIndex + 1) % game.players.length;
     game.players[nextCriticIndex].isCritic = true;
+    console.log(`[DEBUG] nextRound: New critic is ${game.players[nextCriticIndex].name}`);
 
     game.phase = 'THEME';
     game.roundWinner = null;

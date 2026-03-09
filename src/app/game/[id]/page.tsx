@@ -50,18 +50,25 @@ export default function GameRoom() {
         };
     }, [socket, id]);
 
-    if (!gameState) return <div className="text-4xl font-bold animate-pulse text-kitchen-wood">Entering the Kitchen...</div>;
-
-    const me = gameState.players.find(p => p.id === socket?.id);
-    const isGM = me?.isGM;
-    const isCritic = me?.isCritic;
-
     useEffect(() => {
         if (gameState?.phase === 'THEME' || gameState?.phase === 'LOBBY' || gameState?.phase === 'WINNER') {
             setSelectedCards([]);
             setTargetPlayerId(null);
         }
     }, [gameState?.phase]);
+
+    useEffect(() => {
+        if (copied) {
+            const timer = setTimeout(() => setCopied(false), 2000);
+            return () => clearTimeout(timer);
+        }
+    }, [copied]);
+
+    if (!gameState) return <div className="text-4xl font-bold animate-pulse text-kitchen-wood">Entering the Kitchen...</div>;
+
+    const me = gameState.players.find(p => p.id === socket?.id);
+    const isGM = me?.isGM;
+    const isCritic = me?.isCritic;
 
     const copyCode = async () => {
         const text = gameState?.id || '';
@@ -96,12 +103,6 @@ export default function GameRoom() {
         }
     };
 
-    useEffect(() => {
-        if (copied) {
-            const timer = setTimeout(() => setCopied(false), 2000);
-            return () => clearTimeout(timer);
-        }
-    }, [copied]);
 
     const startNextRound = () => {
         console.log('[DEBUG] GM clicking Next Round');

@@ -2,7 +2,7 @@ services:
   app:
     build: https://github.com/RoosterBob23/IdEatThat.git#main
     ports:
-      - "3000:3000"
+      - "3001:3000"
     environment:
       - NODE_ENV=production
     restart: always

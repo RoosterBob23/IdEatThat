@@ -1,6 +1,6 @@
 services:
   app:
-    build: .
+    build: https://github.com/RoosterBob23/IdEatThat.git#main
     ports:
       - "3000:3000"
     environment:

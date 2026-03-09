@@ -56,11 +56,36 @@ export default function GameRoom() {
     const isGM = me?.isGM;
     const isCritic = me?.isCritic;
 
-    const copyCode = () => {
-        navigator.clipboard.writeText(gameState.id);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
+    const copyCode = async () => {
+        const text = gameState?.id || '';
+        try {
+            await navigator.clipboard.writeText(text);
+            setCopied(true);
+        } catch (err) {
+            // Fallback for older browsers or non-secure contexts
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                setCopied(true);
+            } catch (copyErr) {
+                console.error('Fallback copy failed', copyErr);
+            }
+            document.body.removeChild(textArea);
+        }
+        if (copied) {
+            setTimeout(() => setCopied(false), 2000);
+        }
     };
+
+    useEffect(() => {
+        if (copied) {
+            const timer = setTimeout(() => setCopied(false), 2000);
+            return () => clearTimeout(timer);
+        }
+    }, [copied]);
 
     const startNextRound = () => socket?.emit('nextRound', { gameId: gameState.id });
 
@@ -229,31 +254,43 @@ export default function GameRoom() {
             </div>
 
             <div className="flex flex-col items-center gap-12 w-full">
-                <div className="flex flex-wrap justify-center gap-8">
-                    {gameState.players.filter(p => !p.isCritic).map(p => (
-                        <div
-                            key={p.id}
-                            className={cn(
-                                "flex flex-col items-center p-4 transition-all rounded-xl",
-                                targetPlayerId === p.id ? "bg-kitchen-red/10 animate-pulse" : ""
-                            )}
-                        >
-                            <button
-                                onClick={() => !isCritic && p.id !== socket?.id && setTargetPlayerId(p.id)}
-                                disabled={isCritic || p.id === socket?.id}
-                                className="group relative"
+                <div className="flex flex-col items-center gap-4">
+                    {!selectedCards.length && <p className="text-kitchen-red font-bold animate-pulse text-sm">Step 1: Select a Sabotage Card from your hand</p>}
+                    {selectedCards.length > 0 && !targetPlayerId && <p className="text-kitchen-green font-bold animate-pulse text-sm">Step 2: Pick a rival to sabotage!</p>}
+
+                    <div className="flex flex-wrap justify-center gap-8">
+                        {gameState.players.filter(p => !p.isCritic).map(p => (
+                            <div
+                                key={p.id}
+                                className={cn(
+                                    "flex flex-col items-center p-4 transition-all rounded-xl",
+                                    targetPlayerId === p.id ? "bg-kitchen-red/10 animate-pulse scale-110 shadow-lg" : "",
+                                    !selectedCards.length && p.id !== socket?.id ? "opacity-40 grayscale" : ""
+                                )}
                             >
-                                <img src={p.avatar} alt={p.name} className="w-20 h-20 rounded-full chaotic-border bg-white" />
-                                {isCritic && <div className="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center text-white font-bold italic text-xs">HIDD EN</div>}
-                            </button>
-                            <span className="mt-2 font-bold text-sm uppercase">{p.id === socket?.id ? "YOU" : isCritic ? "???" : p.name}</span>
-                            <div className="mt-2 flex gap-1 h-6">
-                                {p.sabotageCards.map((s, idx) => (
-                                    <div key={idx} className="w-6 h-6 bg-kitchen-red rounded-full flex items-center justify-center text-[10px] text-white">🔥</div>
-                                ))}
+                                <button
+                                    onClick={() => !isCritic && p.id !== socket?.id && setTargetPlayerId(p.id)}
+                                    disabled={isCritic || p.id === socket?.id || !selectedCards.length}
+                                    className={cn(
+                                        "group relative transition-transform",
+                                        selectedCards.length && p.id !== socket?.id ? "hover:scale-110 cursor-pointer" : "cursor-not-allowed"
+                                    )}
+                                >
+                                    <img src={p.avatar} alt={p.name} className={cn(
+                                        "w-20 h-20 rounded-full chaotic-border bg-white",
+                                        targetPlayerId === p.id ? "border-kitchen-red border-4" : ""
+                                    )} />
+                                    {isCritic && <div className="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center text-white font-bold italic text-xs">HIDDEN</div>}
+                                </button>
+                                <span className="mt-2 font-bold text-sm uppercase">{p.id === socket?.id ? "YOU" : isCritic ? "???" : p.name}</span>
+                                <div className="mt-2 flex gap-1 h-6">
+                                    {p.sabotageCards.map((s, idx) => (
+                                        <div key={idx} className="w-6 h-6 bg-kitchen-red rounded-full flex items-center justify-center text-[10px] text-white">🔥</div>
+                                    ))}
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                 </div>
 
                 {!isCritic && (

@@ -206,12 +206,10 @@ export function pickRoundWinner(gameId: string, playerId: string, winnerPlayerId
 
     winner.wins += 1;
     game.roundWinner = winner.name;
+    game.phase = 'WINNER';
 
     if (winner.wins >= 5) {
-        game.phase = 'WINNER';
         game.gameWinner = winner.name;
-    } else {
-        game.phase = 'LOBBY'; // Or a separate ROUND_END phase
     }
 
     game.lastActivity = Date.now();

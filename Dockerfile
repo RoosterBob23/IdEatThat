@@ -16,7 +16,7 @@ COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/server.ts ./server.ts
 COPY --from=builder /app/src ./src
-COPY --from=builder "/app/Card List - Sheet1.csv" "./Card List - Sheet1.csv"
+COPY --from=builder ["/app/Card List - Sheet1.csv", "./Card List - Sheet1.csv"]
 
 # Install tsx globally or just use from node_modules
 RUN npm install -g tsx

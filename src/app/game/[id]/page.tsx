@@ -8,7 +8,7 @@ import Card from '@/components/Card';
 import HelpModal from '@/components/HelpModal';
 import StatsOverlay from '@/components/StatsOverlay';
 import { cn } from '@/lib/utils';
-import { Copy, Play, Send, CheckCircle, Info, BarChart3, ChevronRight, Sparkles } from 'lucide-react';
+import { Copy, Play, Send, CheckCircle, Info, BarChart3, ChevronRight, Sparkles, ChefHat } from 'lucide-react';
 
 export default function GameRoom() {
     const { id } = useParams();
@@ -94,7 +94,7 @@ export default function GameRoom() {
                     onClick={() => socket?.emit('startGame', { gameId: gameState.id })}
                     className="bg-kitchen-red text-white px-8 py-4 rounded-2xl chaotic-border text-2xl font-bold hover:scale-105 transition-transform flex items-center gap-2"
                 >
-                    <Play fill="currentColor" /> Start Service
+                    <Play fill="currentColor" /> Start Game
                 </button>
             ) : isGM && (
                 <p className="text-kitchen-red font-bold italic">Waiting for at least 3 players...</p>
@@ -155,32 +155,57 @@ export default function GameRoom() {
             </div>
 
             {!isCritic && !me?.submittedCards.length && (
-                <div className="flex flex-col items-center gap-8">
-                    <div className="flex flex-wrap justify-center gap-4">
-                        {me?.hand.filter(c => c.type === 'Food').map(card => (
-                            <Card
-                                key={card.id}
-                                card={card}
-                                selected={selectedCards.includes(card.id)}
-                                onClick={() => {
-                                    if (selectedCards.includes(card.id)) {
-                                        setSelectedCards(selectedCards.filter(id => id !== card.id));
-                                    } else {
-                                        setSelectedCards([...selectedCards, card.id]);
-                                    }
-                                }}
-                            />
-                        ))}
+                <div className="flex flex-col items-center gap-8 w-full max-w-4xl">
+                    <div className="w-full">
+                        <h3 className="text-xl font-bold text-kitchen-wood/60 mb-4 uppercase flex items-center gap-2">
+                            <ChefHat size={20} /> Your Hand
+                        </h3>
+                        <div className="flex flex-wrap justify-center gap-4 p-4 bg-kitchen-paper/30 rounded-xl border-2 border-dashed border-kitchen-wood/10 min-h-[220px]">
+                            {me?.hand.filter(c => c.type === 'Food' && !selectedCards.includes(c.id)).map(card => (
+                                <Card
+                                    key={card.id}
+                                    card={card}
+                                    onClick={() => setSelectedCards([...selectedCards, card.id])}
+                                />
+                            ))}
+                            {me?.hand.filter(c => c.type === 'Food' && !selectedCards.includes(c.id)).length === 0 && (
+                                <p className="text-kitchen-wood/30 italic flex items-center justify-center">No food cards in hand</p>
+                            )}
+                        </div>
                     </div>
+
+                    <div className="w-full">
+                        <h3 className="text-xl font-bold text-kitchen-red mb-4 uppercase flex items-center gap-2">
+                            <Sparkles size={20} /> Planning Area
+                        </h3>
+                        <div className="flex flex-wrap justify-center gap-4 p-4 bg-white/50 chaotic-border min-h-[220px] relative">
+                            {selectedCards.map(cardId => {
+                                const card = me?.hand.find(c => c.id === cardId);
+                                if (!card) return null;
+                                return (
+                                    <Card
+                                        key={card.id}
+                                        card={card}
+                                        selected={true}
+                                        onClick={() => setSelectedCards(selectedCards.filter(id => id !== card.id))}
+                                    />
+                                );
+                            })}
+                            {selectedCards.length === 0 && (
+                                <p className="text-kitchen-wood/30 italic flex items-center justify-center">Click cards from your hand to plan your dish</p>
+                            )}
+                        </div>
+                    </div>
+
                     {selectedCards.length > 0 && (
                         <button
                             onClick={() => {
                                 socket?.emit('submitFood', { gameId: gameState.id, cardIds: selectedCards });
                                 setSelectedCards([]);
                             }}
-                            className="bg-kitchen-green text-white px-8 py-3 rounded-xl chaotic-border font-bold text-xl flex items-center gap-2 hover:scale-105 transition-transform"
+                            className="bg-kitchen-green text-white px-8 py-3 rounded-xl chaotic-border font-bold text-xl flex items-center gap-2 hover:scale-105 transition-transform mt-4"
                         >
-                            <Send size={20} /> Submit Dish
+                            <Send size={20} /> Submit Cards
                         </button>
                     )}
                 </div>

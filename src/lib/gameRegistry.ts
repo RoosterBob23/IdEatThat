@@ -11,7 +11,7 @@ export function createGame(gmId: string, gmName: string): GameState {
     const gm: Player = {
         id: gmId,
         name: gmName,
-        avatar: '/avatars/avatar_chef_angry.png', // Default for GM
+        avatar: '/avatars/avatar_chef_angry_1773065971117.png', // Default for GM
         hand: [],
         isGM: true,
         isCritic: true, // First GM is the first critic
@@ -53,10 +53,10 @@ export function joinGame(gameId: string, playerId: string, playerName: string): 
     if (game.players.find(p => p.id === playerId)) return game;
 
     const avatars = [
-        '/avatars/avatar_waiter_clumsy.png',
-        '/avatars/avatar_burnt_toast.png',
-        '/avatars/avatar_mustard_mad.png',
-        '/avatars/avatar_onion_crying.png'
+        '/avatars/avatar_waiter_clumsy_1773065990683.png',
+        '/avatars/avatar_burnt_toast_1773066003076.png',
+        '/avatars/avatar_mustard_mad_1773066116691.png',
+        '/avatars/avatar_onion_crying_1773066143429.png'
     ];
 
     const playerAvatar = avatars[game.players.length % avatars.length];

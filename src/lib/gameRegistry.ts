@@ -37,6 +37,10 @@ export function createGame(gmId: string, gmName: string): GameState {
     return newState;
 }
 
+export function getGameByPlayerId(playerId: string): GameState | undefined {
+    return Array.from(games.values()).find(g => g.players.some(p => p.id === playerId));
+}
+
 export function getGame(id: string): GameState | undefined {
     const game = games.get(id);
     if (game) {
@@ -50,7 +54,17 @@ export function joinGame(gameId: string, playerId: string, playerName: string): 
     if (!game || game.phase !== 'LOBBY') return null;
 
     // Check if player already exists
-    if (game.players.find(p => p.id === playerId)) return game;
+    const existingPlayer = game.players.find(p => p.id === playerId);
+    if (existingPlayer) return game;
+
+    // Special case: If the player name matches the GM name and it's the first join after creation, 
+    // update the GM's socket ID. This handles the redirect from home page to game room.
+    const gm = game.players.find(p => p.isGM);
+    if (gm && gm.name === playerName && gm.id !== playerId && game.players.length === 1) {
+        gm.id = playerId;
+        game.gmId = playerId;
+        return game;
+    }
 
     const avatars = [
         '/avatars/avatar_waiter_clumsy_1773065990683.png',

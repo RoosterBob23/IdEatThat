@@ -53,16 +53,17 @@ export function joinGame(gameId: string, playerId: string, playerName: string): 
     const game = games.get(gameId);
     if (!game || game.phase !== 'LOBBY') return null;
 
-    // Check if player already exists
-    const existingPlayer = game.players.find(p => p.id === playerId);
-    if (existingPlayer) return game;
+    // Check if player already exists by ID
+    const playerWithMatchingId = game.players.find(p => p.id === playerId);
+    if (playerWithMatchingId) return game;
 
-    // Special case: If the player name matches the GM name and it's the first join after creation, 
-    // update the GM's socket ID. This handles the redirect from home page to game room.
-    const gm = game.players.find(p => p.isGM);
-    if (gm && gm.name === playerName && gm.id !== playerId && game.players.length === 1) {
-        gm.id = playerId;
-        game.gmId = playerId;
+    // Check if player already exists by Name (Reconnection/Redirect)
+    const existingPlayerByName = game.players.find(p => p.name === playerName);
+    if (existingPlayerByName) {
+        existingPlayerByName.id = playerId;
+        if (existingPlayerByName.isGM) {
+            game.gmId = playerId;
+        }
         return game;
     }
 

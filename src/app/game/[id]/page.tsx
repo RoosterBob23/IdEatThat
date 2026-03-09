@@ -25,14 +25,24 @@ export default function GameRoom() {
     useEffect(() => {
         if (!socket) return;
 
-        socket.emit('joinRoom', { gameId: id });
+        const name = localStorage.getItem('chefName');
+        if (name) {
+            socket.emit('joinGame', { gameId: id, name });
+        } else {
+            socket.emit('joinRoom', { gameId: id });
+        }
 
         socket.on('gameUpdate', (game: GameState) => {
             setGameState(game);
         });
 
         socket.on('connect', () => {
-            socket.emit('joinRoom', { gameId: id });
+            const currentName = localStorage.getItem('chefName');
+            if (currentName) {
+                socket.emit('joinGame', { gameId: id, name: currentName });
+            } else {
+                socket.emit('joinRoom', { gameId: id });
+            }
         });
 
         return () => {

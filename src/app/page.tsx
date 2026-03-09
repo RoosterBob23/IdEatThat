@@ -32,11 +32,13 @@ export default function Home() {
 
   const handleCreate = () => {
     if (!name) return setError('Please enter your name');
+    localStorage.setItem('chefName', name);
     socket?.emit('createGame', { name });
   };
 
   const handleJoin = () => {
     if (!name || !gameId) return setError('Please enter name and game ID');
+    localStorage.setItem('chefName', name);
     socket?.emit('joinGame', { gameId: gameId.toUpperCase(), name });
   };
 

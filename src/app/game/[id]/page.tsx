@@ -158,13 +158,16 @@ export default function GameRoom() {
 
             {isCritic && (
                 <div className="flex flex-wrap justify-center gap-4">
-                    {me?.hand.filter(c => c.type === 'Theme').map(card => (
+                    {me?.hand.map(card => (
                         <Card
                             key={card.id}
                             card={card}
                             selected={selectedCards.includes(card.id)}
+                            disabled={card.type !== 'Theme'}
                             onClick={() => {
-                                socket?.emit('playTheme', { gameId: gameState.id, cardId: card.id });
+                                if (card.type === 'Theme') {
+                                    socket?.emit('playTheme', { gameId: gameState.id, cardId: card.id });
+                                }
                             }}
                         />
                     ))}
@@ -206,15 +209,20 @@ export default function GameRoom() {
                             <ChefHat size={20} /> Your Hand
                         </h3>
                         <div className="flex flex-wrap justify-center gap-4 p-4 bg-kitchen-paper/30 rounded-xl border-2 border-dashed border-kitchen-wood/10 min-h-[220px]">
-                            {me?.hand.filter(c => c.type === 'Food' && !selectedCards.includes(c.id)).map(card => (
+                            {me?.hand.filter(c => !selectedCards.includes(c.id)).map(card => (
                                 <Card
                                     key={card.id}
                                     card={card}
-                                    onClick={() => setSelectedCards([...selectedCards, card.id])}
+                                    disabled={card.type !== 'Food'}
+                                    onClick={() => {
+                                        if (card.type === 'Food') {
+                                            setSelectedCards([...selectedCards, card.id]);
+                                        }
+                                    }}
                                 />
                             ))}
-                            {me?.hand.filter(c => c.type === 'Food' && !selectedCards.includes(c.id)).length === 0 && (
-                                <p className="text-kitchen-wood/30 italic flex items-center justify-center">No food cards in hand</p>
+                            {me?.hand.length === 0 && (
+                                <p className="text-kitchen-wood/30 italic flex items-center justify-center">No cards in hand</p>
                             )}
                         </div>
                     </div>
@@ -285,7 +293,7 @@ export default function GameRoom() {
                                 className={cn(
                                     "flex flex-col items-center p-4 transition-all rounded-xl",
                                     targetPlayerId === p.id ? "bg-kitchen-red/10 animate-pulse scale-110 shadow-lg" : "",
-                                    !selectedCards.length && p.id !== socket?.id ? "opacity-40 grayscale" : ""
+                                    (!selectedCards.length && p.id !== socket?.id) || (selectedCards.length > 0 && p.id === socket?.id) ? "opacity-40 grayscale" : ""
                                 )}
                             >
                                 <button
@@ -316,16 +324,19 @@ export default function GameRoom() {
                 {!isCritic && (
                     <div className="flex flex-col items-center gap-6">
                         <div className="flex flex-wrap justify-center gap-4">
-                            {me?.hand.filter(c => c.type === 'Sabotage').map(card => (
+                            {me?.hand.map(card => (
                                 <Card
                                     key={card.id}
                                     card={card}
                                     selected={selectedCards.includes(card.id)}
+                                    disabled={card.type !== 'Sabotage'}
                                     onClick={() => {
-                                        if (selectedCards.includes(card.id)) {
-                                            setSelectedCards([]);
-                                        } else {
-                                            setSelectedCards([card.id]);
+                                        if (card.type === 'Sabotage') {
+                                            if (selectedCards.includes(card.id)) {
+                                                setSelectedCards([]);
+                                            } else {
+                                                setSelectedCards([card.id]);
+                                            }
                                         }
                                     }}
                                 />

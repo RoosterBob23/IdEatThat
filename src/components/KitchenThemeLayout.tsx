@@ -10,7 +10,7 @@ export default function KitchenThemeLayout({ children }: { children: React.React
                 <div className="relative">
                     <Utensils className="w-16 h-16 text-kitchen-red transform -rotate-12 absolute -left-12 -top-4 opacity-20" />
                     <h1 className="text-6xl font-bold text-wood text-center tracking-tighter transform -rotate-2">
-                        Id <span className="text-kitchen-red underline decoration-wavy decoration-3">Eat</span> That!
+                        I'd <span className="text-kitchen-red underline decoration-wavy decoration-3">Eat</span> That!
                     </h1>
                     <Utensils className="w-16 h-16 text-kitchen-yellow transform rotate-12 absolute -right-12 -bottom-4 opacity-20" />
                 </div>
@@ -22,7 +22,7 @@ export default function KitchenThemeLayout({ children }: { children: React.React
             </main>
 
             <footer className="mt-12 text-kitchen-wood/50 text-sm italic">
-                Keep your kitchen clean... or don't.
+                Exit through the pantry.
             </footer>
         </div>
     );

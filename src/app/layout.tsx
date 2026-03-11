@@ -7,7 +7,7 @@ import KitchenThemeLayout from "@/components/KitchenThemeLayout";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Id Eat That! - Chaotic Kitchen Card Game",
+  title: "I'd Eat That! - Chaotic Kitchen Card Game",
   description: "A fun and chaotic card game about food and sabotage.",
 };
 

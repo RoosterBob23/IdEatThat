@@ -46,8 +46,17 @@ export default function Home() {
     <div className="flex flex-col gap-8 w-full max-w-md bg-white p-8 chaotic-border kitchen-shadow">
       <div className="flex flex-col gap-4">
         <h2 className="text-2xl font-bold text-kitchen-wood flex items-center gap-2">
-          <Utensils className="text-kitchen-red" /> Step into the Kitchen
+          <Utensils className="text-kitchen-red" /> Welcome to the Kitchen. Please don't burn the furniture.
         </h2>
+
+        <div className="bg-kitchen-wood/5 p-4 rounded-lg border-2 border-dashed border-kitchen-wood/10">
+          <p className="text-kitchen-wood italic leading-relaxed text-sm">
+            Welcome to the most chaotic showdown in culinary history! In <strong className="text-kitchen-red">I'd Eat That!</strong>, you’re not just a chef—you’re a survivalist in a kitchen where the rules are as spicy as the secret sauce.
+          </p>
+          <p className="text-kitchen-wood italic leading-relaxed text-sm mt-2">
+            Your goal? Craft the ultimate dish to satisfy the whims of the round’s Critic. But beware: your fellow chefs are armed with sabotage cards and they’re more than ready to turn your five-star masterpiece into a kitchen-sink catastrophe.
+          </p>
+        </div>
 
         <div className="flex flex-col gap-2">
           <label className="text-sm font-bold text-kitchen-wood/70 uppercase">Your Name</label>
@@ -55,7 +64,7 @@ export default function Home() {
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Chef Boyardee"
+            placeholder="The Cereal Burner"
             className="p-3 border-4 border-kitchen-wood/20 rounded-lg focus:border-kitchen-red outline-none transition-colors italic"
           />
         </div>

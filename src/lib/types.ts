@@ -16,6 +16,7 @@ export interface Player {
   isGM: boolean;
   isCritic: boolean;
   wins: number;
+  gamesWon: number;
   submittedCards: Card[];
   sabotageCards: Card[];
   isDoneSabotage: boolean;

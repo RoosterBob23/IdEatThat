@@ -16,6 +16,7 @@ export function createGame(gmId: string, gmName: string): GameState {
         isGM: true,
         isCritic: true, // First GM is the first critic
         wins: 0,
+        gamesWon: 0,
         submittedCards: [],
         sabotageCards: [],
         isDoneSabotage: false
@@ -85,6 +86,7 @@ export function joinGame(gameId: string, playerId: string, playerName: string): 
         isGM: false,
         isCritic: false,
         wins: 0,
+        gamesWon: 0,
         submittedCards: [],
         sabotageCards: [],
         isDoneSabotage: false
@@ -224,6 +226,8 @@ export function pickRoundWinner(gameId: string, playerId: string, winnerPlayerId
 
     if (winner.wins >= 5) {
         game.gameWinner = winner.name;
+        winner.gamesWon += 1;
+        game.phase = 'ENDED';
     }
 
     game.lastActivity = Date.now();
@@ -268,6 +272,35 @@ export function nextRound(gameId: string): GameState | null {
     game.phase = 'THEME';
     game.roundWinner = null;
     game.lastActivity = Date.now();
+    return game;
+}
+
+export function resetGame(gameId: string): GameState | null {
+    const game = games.get(gameId);
+    if (!game) return null;
+
+    console.log(`[DEBUG] resetGame: Full reset for game ${gameId}`);
+    
+    // Clear all player round stats and cards
+    game.players.forEach(p => {
+        p.wins = 0;
+        p.submittedCards = [];
+        p.sabotageCards = [];
+        p.isDoneSabotage = false;
+        
+        // Initial hand size
+        const { hand, remainingDeck } = dealCards(shuffleDeck(loadDeck()), 5); // Start fresh deck
+        p.hand = hand;
+        game.deck = remainingDeck;
+    });
+
+    game.discardPile = [];
+    game.activeTheme = null;
+    game.roundWinner = null;
+    game.gameWinner = null;
+    game.phase = 'THEME';
+    game.lastActivity = Date.now();
+
     return game;
 }
 

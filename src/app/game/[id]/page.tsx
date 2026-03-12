@@ -175,7 +175,7 @@ export default function GameRoom() {
                         onClick={() => socket?.emit('playTheme', { gameId: gameState.id, cardId: null })}
                         className="w-32 h-44 chaotic-border border-dashed border-4 flex items-center justify-center p-4 text-center font-bold text-sm text-kitchen-wood/40 hover:text-kitchen-red hover:border-kitchen-red transition-all"
                     >
-                        Skip Theme (No constraints)
+                        Skip Theme
                     </button>
                 </div>
             )}
@@ -481,10 +481,49 @@ export default function GameRoom() {
         </div>
     );
 
+    const renderEnded = () => (
+        <div className="flex flex-col items-center gap-6 w-full animate-in zoom-in duration-500">
+            <div className="text-center relative">
+                <div className="absolute -top-10 left-1/2 -translate-x-1/2 flex gap-4 opacity-70">
+                    <Sparkles className="text-kitchen-yellow w-10 h-10 animate-bounce" />
+                    <Sparkles className="text-kitchen-red w-10 h-10 animate-bounce delay-100" />
+                    <Sparkles className="text-kitchen-green w-10 h-10 animate-bounce delay-200" />
+                </div>
+                <h2 className="text-5xl font-bold text-kitchen-wood uppercase tracking-tighter">Grand Champion!</h2>
+                <p className="text-xl font-bold text-kitchen-red italic underline decoration-wavy decoration-2">The kitchen has spoken!</p>
+            </div>
+
+            <div className="flex flex-col items-center gap-4 bg-white p-8 chaotic-border kitchen-shadow">
+                <img src={gameState.players.find(p => p.name === gameState.gameWinner)?.avatar} className="w-40 h-40 rounded-full chaotic-border border-8 border-kitchen-yellow bg-kitchen-paper" />
+                <div className="text-center">
+                    <p className="text-4xl font-bold uppercase text-kitchen-wood">{gameState.gameWinner}</p>
+                    <p className="text-lg font-bold text-kitchen-yellow uppercase">Ultimate Kitchen Legend</p>
+                </div>
+                <div className="flex gap-4 mt-2">
+                    <div className="bg-kitchen-wood text-white px-4 py-2 rounded-lg chaotic-border text-center">
+                        <p className="text-xs uppercase opacity-70">Total Games Won</p>
+                        <p className="text-2xl font-bold">{gameState.players.find(p => p.name === gameState.gameWinner)?.gamesWon}</p>
+                    </div>
+                </div>
+            </div>
+
+            {isGM && (
+                <button
+                    onClick={() => socket?.emit('resetGame', { gameId: gameState.id })}
+                    className="mt-4 bg-kitchen-green text-white px-10 py-3 rounded-xl chaotic-border text-xl font-bold flex items-center gap-3 hover:scale-105 transition-all shadow-lg"
+                >
+                    <Play fill="currentColor" size={24} /> Start New Game
+                </button>
+            )}
+            
+            <p className="text-kitchen-wood/40 text-sm font-bold italic mt-4">All players have been notified of your triumph!</p>
+        </div>
+    );
+
     return (
-        <div className="w-full h-full flex flex-col gap-4 relative">
+        <div className="w-full h-full flex flex-col gap-2 relative">
             {/* HUD */}
-            <div className="flex justify-between items-center w-full mb-8">
+            <div className="flex justify-between items-center w-full mb-4">
                 <div className="flex gap-4">
                     <button
                         onClick={() => setIsHelpOpen(true)}
@@ -513,6 +552,7 @@ export default function GameRoom() {
                 {gameState.phase === 'SABOTAGE' && renderSabotage()}
                 {gameState.phase === 'JUDGING' && renderJudging()}
                 {gameState.phase === 'WINNER' && renderWinner()}
+                {gameState.phase === 'ENDED' && renderEnded()}
             </div>
 
             {/* MODALS */}

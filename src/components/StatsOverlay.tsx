@@ -31,10 +31,18 @@ export default function StatsOverlay({ isOpen, onClose, players }: StatsProps) {
                             <img src={player.avatar} alt={player.name} className="w-12 h-12 rounded-full chaotic-border border-2 bg-white" />
                             <div className="flex-1">
                                 <p className="font-bold text-lg">{player.name}</p>
-                                <p className="text-sm font-bold text-kitchen-wood/50 uppercase">{player.wins} rounds won</p>
+                                <div className="flex flex-col">
+                                    <p className="text-[10px] font-bold text-kitchen-wood/50 uppercase leading-none">Rounds Won: {player.wins}</p>
+                                    <p className="text-[10px] font-bold text-kitchen-yellow uppercase leading-none mt-1">Games Won: {player.gamesWon}</p>
+                                </div>
                             </div>
-                            <div className="w-12 h-12 flex items-center justify-center bg-kitchen-yellow rounded-full chaotic-border font-bold text-xl">
-                                {player.wins}
+                            <div className="flex flex-col items-center gap-1">
+                                <div className="w-10 h-10 flex items-center justify-center bg-kitchen-yellow rounded-full chaotic-border font-bold text-lg" title="Rounds Won">
+                                    {player.wins}
+                                </div>
+                                <div className="w-8 h-8 flex items-center justify-center bg-kitchen-red text-white rounded-full chaotic-border font-bold text-xs" title="Games Won">
+                                    {player.gamesWon}
+                                </div>
                             </div>
                         </div>
                     ))}

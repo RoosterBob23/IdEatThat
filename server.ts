@@ -106,6 +106,13 @@ app.prepare().then(() => {
             }
         });
 
+        socket.on('resetGame', ({ gameId }) => {
+            const game = GameRegistry.resetGame(gameId);
+            if (game) {
+                io.to(gameId).emit('gameUpdate', game);
+            }
+        });
+
         socket.on('disconnect', () => {
             console.log('User disconnected:', socket.id);
         });

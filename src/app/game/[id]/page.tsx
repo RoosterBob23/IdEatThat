@@ -311,6 +311,13 @@ export default function GameRoom() {
                                     {isCritic && <div className="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center text-white font-bold italic text-xs">HIDDEN</div>}
                                 </button>
                                 <span className="mt-2 font-bold text-sm uppercase">{p.id === socket?.id ? "YOU" : isCritic ? "???" : p.name}</span>
+                                <div className="mt-1">
+                                    {p.isDoneSabotage ? (
+                                        <span className="text-[10px] bg-green-500 text-white px-2 py-0.5 rounded-full font-bold">READY</span>
+                                    ) : (
+                                        <span className="text-[10px] bg-kitchen-wood/20 text-kitchen-wood/50 px-2 py-0.5 rounded-full font-bold">WAITING</span>
+                                    )}
+                                </div>
                                 <div className="mt-2 flex gap-1 h-6">
                                     {p.sabotageCards.map((s, idx) => (
                                         <div key={idx} className="w-6 h-6 bg-kitchen-red rounded-full flex items-center justify-center text-[10px] text-white">🔥</div>
@@ -354,15 +361,29 @@ export default function GameRoom() {
                                 🔥 Ruin {gameState.players.find(p => p.id === targetPlayerId)?.name}&apos;s Dish
                             </button>
                         )}
+                        {!me?.isDoneSabotage && (
+                            <button
+                                onClick={() => socket?.emit('playerDoneSabotage', { gameId: gameState.id })}
+                                className="mt-4 bg-kitchen-green text-white px-8 py-3 rounded-xl chaotic-border font-bold text-xl hover:scale-105 transition-transform"
+                            >
+                                👍 I&apos;m Done Sabotaging
+                            </button>
+                        )}
                     </div>
                 )}
 
-                {isGM && (
+                {isCritic && (
                     <button
                         onClick={() => socket?.emit('endSabotage', { gameId: gameState.id })}
-                        className="bg-kitchen-wood text-white px-8 py-3 rounded-xl chaotic-border font-bold text-xl"
+                        disabled={!gameState.players.filter(p => !p.isCritic).every(p => p.isDoneSabotage)}
+                        className={cn(
+                            "bg-kitchen-wood text-white px-8 py-3 rounded-xl chaotic-border font-bold text-xl transition-all",
+                            !gameState.players.filter(p => !p.isCritic).every(p => p.isDoneSabotage) ? "opacity-30 cursor-not-allowed grayscale" : "hover:bg-black"
+                        )}
                     >
-                        Enough! Bring the food!
+                        {!gameState.players.filter(p => !p.isCritic).every(p => p.isDoneSabotage) 
+                            ? "Waiting for Chefs..." 
+                            : "Enough! Bring the food!"}
                     </button>
                 )}
             </div>

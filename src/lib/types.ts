@@ -18,6 +18,7 @@ export interface Player {
   wins: number;
   submittedCards: Card[];
   sabotageCards: Card[];
+  isDoneSabotage: boolean;
 }
 
 export interface GameState {

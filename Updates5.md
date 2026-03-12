@@ -1,0 +1,3 @@
+Whether the non-critic players play a card or not, there should be a button they have to click to end their saboatage card phase.  This concept should be reflected on the critic's screen to see who has ended their sabotage phase.  The critic should not be able to proceed until all non-critic players have ended their sabotage phase.   
+
+In current state, if no player has a sabotage card to play, the game is stuck.  The critic cannot advance the game.

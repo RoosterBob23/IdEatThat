@@ -78,6 +78,13 @@ app.prepare().then(() => {
             }
         });
 
+        socket.on('playerDoneSabotage', ({ gameId }) => {
+            const game = GameRegistry.playerDoneSabotage(gameId, socket.id);
+            if (game) {
+                io.to(gameId).emit('gameUpdate', game);
+            }
+        });
+
         socket.on('endSabotage', ({ gameId }) => {
             const game = GameRegistry.endSabotage(gameId);
             if (game) {

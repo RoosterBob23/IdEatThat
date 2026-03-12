@@ -17,7 +17,8 @@ export function createGame(gmId: string, gmName: string): GameState {
         isCritic: true, // First GM is the first critic
         wins: 0,
         submittedCards: [],
-        sabotageCards: []
+        sabotageCards: [],
+        isDoneSabotage: false
     };
 
     const newState: GameState = {
@@ -85,7 +86,8 @@ export function joinGame(gameId: string, playerId: string, playerName: string): 
         isCritic: false,
         wins: 0,
         submittedCards: [],
-        sabotageCards: []
+        sabotageCards: [],
+        isDoneSabotage: false
     };
 
     game.players.push(newPlayer);
@@ -185,6 +187,18 @@ export function playSabotageCard(gameId: string, playerId: string, cardId: strin
     return game;
 }
 
+export function playerDoneSabotage(gameId: string, playerId: string): GameState | null {
+    const game = games.get(gameId);
+    if (!game || game.phase !== 'SABOTAGE') return null;
+
+    const player = game.players.find(p => p.id === playerId);
+    if (!player || player.isCritic) return null;
+
+    player.isDoneSabotage = true;
+    game.lastActivity = Date.now();
+    return game;
+}
+
 export function endSabotage(gameId: string): GameState | null {
     const game = games.get(gameId);
     if (!game || game.phase !== 'SABOTAGE') return null;
@@ -228,6 +242,7 @@ export function nextRound(gameId: string): GameState | null {
         game.discardPile.push(...p.sabotageCards);
         p.submittedCards = [];
         p.sabotageCards = [];
+        p.isDoneSabotage = false;
 
         // Replenish hand to 5
         const needed = 5 - p.hand.length;

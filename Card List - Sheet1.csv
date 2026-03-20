@@ -2,7 +2,7 @@ Name,Type
 Apple,Food
 Asparagus,Food
 Avacodo,Food
-Baby back ribs,Food
+Baby Back Ribs,Food
 Bacon,Food
 Banana,Food
 Bell Pepper,Food
@@ -16,19 +16,19 @@ Carrots,Food
 Cauliflower,Food
 Cheddar Cheese,Food
 Cheese Doritos,Food
-Cheezit,Food
+Cheezitz,Food
 Chicken Breasts,Food
 Chocolate,Food
 Coca Cola,Food
-Corn on the cob,Food
-Corn starch,Food
+Corn on The Cob,Food
+Corn Starch,Food
 Crisco,Food
 Delmonico Steaks,Food
-Dry Dog food,Food
+Dill Weed (Fresh),Food
 Eggplant,Food
 Eggs,Food
 Flour,Food
-Frozen chicken nuggets,Food
+Frozen Chicken Nuggets,Food
 Grapefruit,Food
 Ground beef,Food
 Half and Half,Food
@@ -52,43 +52,43 @@ Peanut oil,Food
 Peanuts,Food
 Beef Tongue,Food
 Pork,Food
-Racoon meat,Food
+Ponzu,Food
 Rice,Food
-Rocky mountain oysters,Food
-Scorpion,Food
+Rocky Mountain Oysters,Food
+Refried Beans,Food
 Shrimp,Food
-Snake,Food
+Sake,Food
 Spinach,Food
-Steak,Food
-Summer squash,Food
-Sweet breads (organ meat),Food
+Potatoes,Food
+Summer Squash,Food
+String Beans,Food
 Sweet Peppers,Food
-Sweet potatoes,Food
-Talapia (Fish),Food
+Sweet Potatoes,Food
+Jalapeno Pepper,Food
 Tofu,Food
 Tomato,Food
-Tuna (Fish),Food
-Vanilla ice cream,Food
-Velveta,Food
+Tuna in A Can,Food
+Vanilla Ice Cream,Food
+Velveeta,Food
 Vodka,Food
-Winter Squash,Food
+White Asparagus,Food
 Wonder Bread,Food
 Yogurt,Food
-Add a food of your choice to a meal,Sabotage
-Food of your choice is over salted,Sabotage
-Food of your choice is over-cooked,Sabotage
-Food of your choice is spoiled,Sabotage
-Food of your choice is under cooked,Sabotage
-Food of your choice is underseasoned,Sabotage
-Judge has a peanut allergy,Sabotage
+Judge Does Not Eat Fish,Sabotage
+Your Food is Over Salted,Sabotage
+Your Food is Over Cooked,Sabotage
+Your Food is Spoiled,Sabotage
+Your Food is Under Cooked,Sabotage
+Your Food is Under Seasoned,Sabotage
+Judge Has a Peanut Allergy,Sabotage
 Judge is Dairy Free,Sabotage
-Judge is gluten Free,Sabotage
-Protein of your choice is overcooked,Sabotage
-Remove an item of your choice from a meal,Sabotage
-Swap out food item of your choice with  one in your hand,Sabotage
-The Judge is a vegetarian,Sabotage
-The Judge is vegan,Sabotage
-Vegetable of your choice is over salted,Sabotage
+Judge is Gluten Free,Sabotage
+Your Food is Over Salted,Sabotage
+Your Food is Over Cooked,Sabotage
+Your Food is Spoiled,Sabotage
+The Judge is Vegetarian,Sabotage
+The Judge is Vegan,Sabotage
+Your Food is Over Salted,Sabotage
 Chinese,Theme
 Asian,Theme
 Fried,Theme

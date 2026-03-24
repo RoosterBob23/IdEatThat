@@ -529,7 +529,7 @@ export default function GameRoom() {
                         onClick={() => setIsHelpOpen(true)}
                         className="p-2 bg-white chaotic-border kitchen-shadow hover:text-kitchen-red transition-all flex items-center gap-2 font-bold px-4"
                     >
-                        <Info size={20} /> <span className="hidden md:inline">HELP</span>
+                        <Info size={20} /> <span className="hidden md:inline">HOW TO PLAY</span>
                     </button>
                     <button
                         onClick={() => setIsStatsOpen(true)}

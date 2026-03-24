@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSocket } from '@/components/SocketProvider';
 import { GameState } from '@/lib/types';
-import { PlusCircle, LogIn, Utensils } from 'lucide-react';
-
+import { PlusCircle, LogIn, Utensils, HelpCircle } from 'lucide-react';
+import RulesContent from '@/components/RulesContent';
 export default function Home() {
   const socket = useSocket();
   const router = useRouter();
@@ -101,6 +101,13 @@ export default function Home() {
             <LogIn /> Join Game
           </button>
         </div>
+      </div>
+
+      <div className="mt-4 pt-8 border-t-4 border-dashed border-kitchen-wood/20">
+        <h2 className="text-2xl font-bold text-kitchen-red mb-6 uppercase flex items-center gap-2">
+            <HelpCircle size={28} /> How to Play
+        </h2>
+        <RulesContent />
       </div>
     </div>
   );

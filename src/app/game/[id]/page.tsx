@@ -21,6 +21,7 @@ export default function GameRoom() {
     const [isHelpOpen, setIsHelpOpen] = useState(false);
     const [isStatsOpen, setIsStatsOpen] = useState(false);
     const [copied, setCopied] = useState(false);
+    const [mealDescription, setMealDescription] = useState<string>('');
 
     useEffect(() => {
         if (!socket) return;
@@ -54,6 +55,7 @@ export default function GameRoom() {
         if (gameState?.phase === 'THEME' || gameState?.phase === 'LOBBY' || gameState?.phase === 'WINNER') {
             setSelectedCards([]);
             setTargetPlayerId(null);
+            setMealDescription('');
         }
     }, [gameState?.phase]);
 
@@ -251,15 +253,26 @@ export default function GameRoom() {
                     </div>
 
                     {selectedCards.length > 0 && (
-                        <button
-                            onClick={() => {
-                                socket?.emit('submitFood', { gameId: gameState.id, cardIds: selectedCards });
-                                setSelectedCards([]);
-                            }}
-                            className="bg-kitchen-green text-white px-8 py-3 rounded-xl chaotic-border font-bold text-xl flex items-center gap-2 hover:scale-105 transition-transform mt-4"
-                        >
-                            <Send size={20} /> Submit Cards
-                        </button>
+                        <div className="flex flex-col items-center gap-4 mt-4 w-full max-w-lg">
+                            <textarea
+                                value={mealDescription}
+                                onChange={(e) => setMealDescription(e.target.value)}
+                                placeholder="Describe your masterpiece..."
+                                className="w-full p-3 chaotic-border rounded-xl resize-none text-kitchen-wood placeholder-kitchen-wood/40 border-2 border-dashed border-kitchen-wood/30 focus:outline-none focus:border-kitchen-red"
+                                rows={3}
+                                maxLength={200}
+                            />
+                            <button
+                                onClick={() => {
+                                    socket?.emit('submitFood', { gameId: gameState.id, cardIds: selectedCards, mealDescription });
+                                    setSelectedCards([]);
+                                    setMealDescription('');
+                                }}
+                                className="bg-kitchen-green text-white px-8 py-3 rounded-xl chaotic-border font-bold text-xl flex items-center gap-2 hover:scale-105 transition-transform"
+                            >
+                                <Send size={20} /> Submit Cards
+                            </button>
+                        </div>
                     )}
                 </div>
             )}
@@ -418,6 +431,9 @@ export default function GameRoom() {
 
                         <div className="flex flex-col gap-4">
                             <span className="text-xs font-bold uppercase text-kitchen-wood/30 tracking-tighter self-center italic">Chef Anonymous Dish</span>
+                            {p.mealDescription && (
+                                <span className="text-sm font-medium text-kitchen-wood italic text-center px-4">"{p.mealDescription}"</span>
+                            )}
                             <div className="flex flex-wrap justify-center gap-2">
                                 {p.submittedCards.map(c => <Card key={c.id} card={c} className="scale-75 -m-4" />)}
                             </div>

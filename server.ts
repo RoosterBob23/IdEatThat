@@ -27,6 +27,7 @@ app.prepare().then(() => {
         console.log('New connection:', socket.id);
 
         socket.on('createGame', ({ name }) => {
+            console.log(`[USER ACTIVITY] User ${name} created new game`);
             const game = GameRegistry.createGame(socket.id, name);
             socket.join(game.id);
             socket.emit('gameUpdate', game);
@@ -41,6 +42,7 @@ app.prepare().then(() => {
         });
 
         socket.on('joinGame', ({ gameId, name }) => {
+            console.log(`[USER ACTIVITY] User ${name} joining game ${gameId}`);
             const game = GameRegistry.joinGame(gameId, socket.id, name);
             if (game) {
                 socket.join(gameId);
@@ -53,6 +55,8 @@ app.prepare().then(() => {
         socket.on('startGame', ({ gameId }) => {
             const game = GameRegistry.startGame(gameId, socket.id);
             if (game) {
+                const playerName = game.players.find(p => p.id === socket.id)?.name || socket.id;
+                console.log(`[USER ACTIVITY] User ${playerName} started game ${gameId}`);
                 io.to(gameId).emit('gameUpdate', game);
             }
         });
@@ -60,13 +64,17 @@ app.prepare().then(() => {
         socket.on('playTheme', ({ gameId, cardId }) => {
             const game = GameRegistry.playThemeCard(gameId, socket.id, cardId);
             if (game) {
+                const playerName = game.players.find(p => p.id === socket.id)?.name || socket.id;
+                console.log(`[USER ACTIVITY] User ${playerName} ${cardId ? 'played a theme card' : 'skipped theme'} in game ${gameId}`);
                 io.to(gameId).emit('gameUpdate', game);
             }
         });
 
-        socket.on('submitFood', ({ gameId, cardIds }) => {
-            const game = GameRegistry.submitFoodCards(gameId, socket.id, cardIds);
+        socket.on('submitFood', ({ gameId, cardIds, mealDescription }) => {
+            const game = GameRegistry.submitFoodCards(gameId, socket.id, cardIds, mealDescription);
             if (game) {
+                const playerName = game.players.find(p => p.id === socket.id)?.name || socket.id;
+                console.log(`[USER ACTIVITY] User ${playerName} submitted food cards in game ${gameId}`);
                 io.to(gameId).emit('gameUpdate', game);
             }
         });
@@ -74,6 +82,8 @@ app.prepare().then(() => {
         socket.on('playSabotage', ({ gameId, cardId, targetPlayerId }) => {
             const game = GameRegistry.playSabotageCard(gameId, socket.id, cardId, targetPlayerId);
             if (game) {
+                const playerName = game.players.find(p => p.id === socket.id)?.name || socket.id;
+                console.log(`[USER ACTIVITY] User ${playerName} played a sabotage card in game ${gameId}`);
                 io.to(gameId).emit('gameUpdate', game);
             }
         });
@@ -81,6 +91,8 @@ app.prepare().then(() => {
         socket.on('playerDoneSabotage', ({ gameId }) => {
             const game = GameRegistry.playerDoneSabotage(gameId, socket.id);
             if (game) {
+                const playerName = game.players.find(p => p.id === socket.id)?.name || socket.id;
+                console.log(`[USER ACTIVITY] User ${playerName} clicked 'Done Sabotaging' in game ${gameId}`);
                 io.to(gameId).emit('gameUpdate', game);
             }
         });
@@ -102,6 +114,8 @@ app.prepare().then(() => {
         socket.on('nextRound', ({ gameId }) => {
             const game = GameRegistry.nextRound(gameId);
             if (game) {
+                const playerName = game.players.find(p => p.id === socket.id)?.name || socket.id;
+                console.log(`[USER ACTIVITY] User ${playerName} initiated next round for game ${gameId}`);
                 io.to(gameId).emit('gameUpdate', game);
             }
         });
@@ -109,6 +123,8 @@ app.prepare().then(() => {
         socket.on('resetGame', ({ gameId }) => {
             const game = GameRegistry.resetGame(gameId);
             if (game) {
+                const playerName = game.players.find(p => p.id === socket.id)?.name || socket.id;
+                console.log(`[USER ACTIVITY] User ${playerName} reset game ${gameId}`);
                 io.to(gameId).emit('gameUpdate', game);
             }
         });

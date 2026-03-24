@@ -20,6 +20,7 @@ export interface Player {
   submittedCards: Card[];
   sabotageCards: Card[];
   isDoneSabotage: boolean;
+  mealDescription?: string;
 }
 
 export interface GameState {

@@ -104,13 +104,26 @@ export function startGame(gameId: string, gmId: string): GameState | null {
     // Deal initial hands
     game.players.forEach(player => {
         const { hand, remainingDeck } = dealCards(game.deck, 5);
+        console.log(`[USER ACTIVITY] Dealt cards to ${player.name}: ${hand.map(c => c.name).join(', ')}`);
         player.hand = hand;
         game.deck = remainingDeck;
     });
 
     game.phase = 'THEME';
+    autoSkipThemeIfNoCard(game);
     game.lastActivity = Date.now();
     return game;
+}
+
+function autoSkipThemeIfNoCard(game: GameState) {
+    if (game.phase === 'THEME') {
+        const critic = game.players.find(p => p.isCritic);
+        if (critic && !critic.hand.some(c => c.type === 'Theme')) {
+            console.log(`[USER ACTIVITY] Critic ${critic.name} has no Theme cards. Auto-skipping THEME phase.`);
+            game.phase = 'SUBMISSION';
+            game.players.forEach(p => checkAndRefreshHand(game, p));
+        }
+    }
 }
 
 export function playThemeCard(gameId: string, playerId: string, cardId: string | null): GameState | null {
@@ -142,12 +155,13 @@ function checkAndRefreshHand(game: GameState, player: Player) {
     if (!hasFood && player.hand.length > 0) {
         game.discardPile.push(...player.hand);
         const { hand, remainingDeck } = dealCards(game.deck, 5);
+        console.log(`[USER ACTIVITY] Replacing hand for ${player.name} (no food cards). Dealt: ${hand.map(c => c.name).join(', ')}`);
         player.hand = hand;
         game.deck = remainingDeck;
     }
 }
 
-export function submitFoodCards(gameId: string, playerId: string, cardIds: string[]): GameState | null {
+export function submitFoodCards(gameId: string, playerId: string, cardIds: string[], mealDescription?: string): GameState | null {
     const game = games.get(gameId);
     if (!game || game.phase !== 'SUBMISSION') return null;
 
@@ -158,6 +172,9 @@ export function submitFoodCards(gameId: string, playerId: string, cardIds: strin
     if (cards.length === 0) return null;
 
     player.submittedCards = cards;
+    if (mealDescription) {
+        player.mealDescription = mealDescription;
+    }
     player.hand = player.hand.filter(c => !cardIds.includes(c.id));
 
     // If all non-critic players submitted, move to sabotage
@@ -247,11 +264,13 @@ export function nextRound(gameId: string): GameState | null {
         p.submittedCards = [];
         p.sabotageCards = [];
         p.isDoneSabotage = false;
+        p.mealDescription = undefined;
 
         // Replenish hand to 5
         const needed = 5 - p.hand.length;
         if (needed > 0) {
             const { hand, remainingDeck } = dealCards(game.deck, needed);
+            console.log(`[USER ACTIVITY] Replenished ${needed} cards for ${p.name}: ${hand.map(c => c.name).join(', ')}`);
             p.hand.push(...hand);
             game.deck = remainingDeck;
         }
@@ -270,6 +289,7 @@ export function nextRound(gameId: string): GameState | null {
     console.log(`[DEBUG] nextRound: New critic is ${game.players[nextCriticIndex].name}`);
 
     game.phase = 'THEME';
+    autoSkipThemeIfNoCard(game);
     game.roundWinner = null;
     game.lastActivity = Date.now();
     return game;
@@ -287,9 +307,11 @@ export function resetGame(gameId: string): GameState | null {
         p.submittedCards = [];
         p.sabotageCards = [];
         p.isDoneSabotage = false;
+        p.mealDescription = undefined;
         
         // Initial hand size
         const { hand, remainingDeck } = dealCards(shuffleDeck(loadDeck()), 5); // Start fresh deck
+        console.log(`[USER ACTIVITY] Dealt cards to ${p.name} on reset: ${hand.map(c => c.name).join(', ')}`);
         p.hand = hand;
         game.deck = remainingDeck;
     });
@@ -299,6 +321,7 @@ export function resetGame(gameId: string): GameState | null {
     game.roundWinner = null;
     game.gameWinner = null;
     game.phase = 'THEME';
+    autoSkipThemeIfNoCard(game);
     game.lastActivity = Date.now();
 
     return game;

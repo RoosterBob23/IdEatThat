@@ -3,6 +3,7 @@ import { loadDeck, shuffleDeck, dealCards } from './cardDeck';
 
 const games = new Map<string, GameState>();
 const EXPIRATION_TIME = 60 * 60 * 1000; // 1 hour
+const STARTED_EXPIRATION_TIME = 4 * 60 * 60 * 1000; // 4 hours
 
 export function createGame(gmId: string, gmName: string): GameState {
     const gameId = Math.random().toString(36).substring(2, 9).toUpperCase();
@@ -331,7 +332,9 @@ export function resetGame(gameId: string): GameState | null {
 setInterval(() => {
     const now = Date.now();
     for (const [id, game] of games.entries()) {
-        if (now - game.lastActivity > EXPIRATION_TIME) {
+        const expirationTime = game.phase === 'LOBBY' ? EXPIRATION_TIME : STARTED_EXPIRATION_TIME;
+        if (now - game.lastActivity > expirationTime) {
+            console.log(`[DEBUG] Game ${id} expired. Phase: ${game.phase}`);
             games.delete(id);
         }
     }

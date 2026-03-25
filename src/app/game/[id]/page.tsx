@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useSocket } from '@/components/SocketProvider';
 import { GameState, Player, Card as CardType } from '@/lib/types';
@@ -51,6 +51,8 @@ export default function GameRoom() {
         };
     }, [socket, id]);
 
+    const prevPhaseRef = useRef<string | null>(null);
+
     useEffect(() => {
         if (gameState?.phase === 'THEME' || gameState?.phase === 'LOBBY' || gameState?.phase === 'WINNER') {
             setSelectedCards([]);
@@ -71,6 +73,16 @@ export default function GameRoom() {
     const me = gameState.players.find(p => p.id === socket?.id);
     const isGM = me?.isGM;
     const isCritic = me?.isCritic;
+
+    useEffect(() => {
+        if (!gameState) return;
+        if (prevPhaseRef.current !== 'JUDGING' && gameState.phase === 'JUDGING' && isCritic) {
+            setTimeout(() => {
+                window.alert("JUDGMENT TIME! Please review the dishes and pick a winner.");
+            }, 100);
+        }
+        prevPhaseRef.current = gameState.phase;
+    }, [gameState?.phase, isCritic]);
 
     const copyCode = async () => {
         const text = gameState?.id || '';
@@ -300,7 +312,7 @@ export default function GameRoom() {
                     {selectedCards.length > 0 && !targetPlayerId && <p className="text-kitchen-green font-bold animate-pulse text-sm">Step 2: Pick a rival to sabotage!</p>}
 
                     <div className="flex flex-wrap justify-center gap-8">
-                        {gameState.players.filter(p => !p.isCritic).map(p => (
+                        {gameState.players.filter(p => !p.isCritic && p.id !== socket?.id).map(p => (
                             <div
                                 key={p.id}
                                 className={cn(

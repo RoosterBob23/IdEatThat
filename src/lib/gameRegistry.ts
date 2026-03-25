@@ -54,7 +54,7 @@ export function getGame(id: string): GameState | undefined {
 
 export function joinGame(gameId: string, playerId: string, playerName: string): GameState | null {
     const game = games.get(gameId);
-    if (!game || game.phase !== 'LOBBY') return null;
+    if (!game) return null;
 
     // Check if player already exists by ID
     const playerWithMatchingId = game.players.find(p => p.id === playerId);
@@ -69,6 +69,8 @@ export function joinGame(gameId: string, playerId: string, playerName: string): 
         }
         return game;
     }
+
+    if (game.phase !== 'LOBBY') return null;
 
     const avatars = [
         '/avatars/avatar_waiter_clumsy_1773065990683.png',
